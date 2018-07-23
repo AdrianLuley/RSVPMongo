@@ -1,0 +1,56 @@
+html
+    head    
+        title="RSVP"
+        style   
+            include main.css
+    body
+        form(action="http://localhost:3000" method="post" enctype="multipart/form-data")
+        div
+            label(for="name")
+                value="Name:"
+            input(type="text" id="name" name="user_name" autofocus="true")
+    
+        div
+            label(for="mail")
+                value="E-mail:"
+            input(type="email" id="mail" name="user_mail")
+    
+        div
+            label(for="contact")
+                value="How many Guest will you be bring:"
+                select(id="contactMethod" name="user_contact")
+                    option None
+                    option 1
+                    option 2
+                    option 3
+                    option 4
+                    option 5
+                    option 6
+                    option 7
+                    option 8
+    
+    
+        div
+            form
+                fieldset
+                    legend Will you be Attending our Event?
+                        ul
+                            li
+                                label(for="yes")
+                                    value="Yes I'll be there!"
+                                input(type="radio" id="yes" name="system" value="yes")
+                
+                            li
+                                label(for="no")
+                                value="I am sorry I can't make it"
+                                input(type="radio" id="no" name="system" value="no")
+            
+                div
+                    label(for="myDate")
+                        value="When are you available for futher questions?"
+                    input(type="date" name="myDate" min="2018-05-1" max="2018-05-25" id="myDate")
+            
+                div(class="button")
+                    button(type="submit")
+                        value="Send your message"
+            
