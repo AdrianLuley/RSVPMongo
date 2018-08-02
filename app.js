@@ -1,61 +1,61 @@
-const express = require('express')
-const app = express()
+var express = require('express');
+var mongoose = require('mongoose');
 const port = 3000;
 const pug = require('pug')
-const fs = require('fs')
 const path = require('path');
 
-app.set('view engine', 'pug');
+mongoose.connect('mongodb://localhost/rsvp');
+const db = mongoose.connection;
 
-// allows us to process submitted form data
-app.use(express.urlencoded({
-    extended: true
-}));
+var Schema = mongoose.Schema;
 
-app.get('/', function(req, res) {
-    const path = '/';
-    fs.readdir(path, (err, items) => {
-        res.render('index');
-    });
-});
-app.get('/guest', function(req, res) {
-    const path = '/views/guest';
-    fs.readdir(path, (err, items) => {
-        res.render('guest');
-    });
-});
+// Defines the scehma we want our RSVP documents to take
+var rsvpSchema = new Schema({
+    name: String,
+    email: String,
+    attending: Boolean,
+    guests: Number
+})
 
+// Sets up the document model
+var Response = mongoose.model('response', rsvpSchema);
+
+var app = express();
+app.use(express.static("./public"));
 
 
-app.post('/success', function (req, res) {
-   
-    var name = req.body.user_name;
-    var message = req.body.user_message;
-    var email = req.body.user_mail;
-    var number = req.body.user_tel;
-    var url = req.body.user_url;
-    var contactMethod = req.body.user_contact;
-  
-    var msg = req.body.user_message;
-    var myDate = req.body.myDate;
+app.set('view engine', 'pug')
 
-    console.log("Name: " + name);
-    
-    console.log("E-Mail: " + email);
-    console.log("Phone Number:" + number);
-   
-  
-    console.log("How many Guest will you be bring:" + contactMethod);
-    console.log("Yes I'll be there!!!" + yes);
-    console.log("I am sorry I can't make it" + no);
-    
-    
-
-    res.send(`
-    <h1>Thanks ${name}!</h1>
-    <p>Thank you for your RSVP for our event, we will email you with further information<strong>${email}</strong>.</p>
-    <blockquote>${message}</blockquote>
-    `);
+app.get('/', (req, res) => {
+    res.render('index');
 });
 
-app.listen(port);
+app.get('/guest', (req, res) => {
+    Response.find((err, responses) => {
+        if (err) return console.error(err);
+        res.render('guest', {
+            responses: responses
+        });
+    })
+});
+
+app.post('/success', (req, res) => {
+ const  rsvp = new Response({
+        name: req.body.user_name,
+        email: req.body.user_mail,
+        contactMethod: req.body.user_contact,
+        myDate: req.body.myDate,
+        attending: req.body.system,
+        guests: Number(req.body.user_attending)
+    })
+
+    
+    rsvp.save((err, rsvp) => {
+        if (err) return console.error(err);
+        // client.close()
+    })
+
+   res.render('success');
+});
+
+app.listen(3000);

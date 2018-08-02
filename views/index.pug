@@ -4,7 +4,8 @@ html
         style   
             include main.css
     body
-        form(action="http://localhost:3000" method="post" enctype="multipart/form-data")
+       
+    form(id="rsvpForm",action="success" name="RSVP" method="POST" enctype="application/json")
         div
             label(for="name")
                 value="Name:"
@@ -16,9 +17,9 @@ html
             input(type="email" id="mail" name="user_mail")
     
         div
-            label(for="contact")
+            label(for="attending")
                 value="How many Guest will you be bring:"
-                select(id="contactMethod" name="user_contact")
+                select(id="guests" name="user_attending")
                     option None
                     option 1
                     option 2
