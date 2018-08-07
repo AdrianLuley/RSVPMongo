@@ -4,8 +4,12 @@ const port = 3000;
 const pug = require('pug')
 const path = require('path');
 
-mongoose.connect('mongodb://localhost/rsvp');
+mongoose.connect('mongodb://127.0.0.1:27017/rsvp');
 const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function() {
+  // we're connected!
+});
 
 var Schema = mongoose.Schema;
 
@@ -22,7 +26,9 @@ var Response = mongoose.model('response', rsvpSchema);
 
 var app = express();
 app.use(express.static("./public"));
-
+app.use(express.urlencoded({
+    extended: true
+}));
 
 app.set('view engine', 'pug')
 
